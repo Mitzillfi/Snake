@@ -137,8 +137,16 @@ public class Screen extends JPanel implements Runnable {
     }
 
     KeyListener listener = new KeyAdapter() {
+
         @Override
         public void keyPressed(KeyEvent e) {
+            // interduce a delay to fix snake moving 180 degress
+            try {
+                Thread.sleep(40);
+            } catch (InterruptedException qe) {
+                Thread.currentThread().interrupt();
+                qe.printStackTrace();
+            }
             if (e.getKeyChar() == 'w' && !down && !up) {
                 up = true;
                 down = false;
