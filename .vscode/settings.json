@@ -1,0 +1,7 @@
+{
+
+    "editor.mouseWheelZoom": true,
+    "java.project.sourcePaths": [
+        "."
+    ]
+}

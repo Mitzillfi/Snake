@@ -6,8 +6,8 @@ public class Client extends JFrame {
         Screen screen = new Screen();
         screen.init();
         screen.start();
-            add(screen);
-            pack();
+        add(screen);
+        pack();
         setLocationRelativeTo(null);
         setVisible(true);
     }
