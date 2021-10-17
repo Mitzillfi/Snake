@@ -1,7 +1,5 @@
 {
-
-    "editor.mouseWheelZoom": true,
-    "java.project.sourcePaths": [
-        "."
-    ]
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "editor.mouseWheelZoom": true
 }
