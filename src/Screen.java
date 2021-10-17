@@ -6,18 +6,21 @@ import javax.swing.JPanel;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.lang.Thread;
 import java.util.ArrayList;
 
 public class Screen extends JPanel implements Runnable {
-    private final int WIDTH = 500, HEIGHT = 500;
-    ArrayList<Body> bodies = new ArrayList<Body>();
-    private Food food;
+    private static final int WIDTH = 500;
+    private static final int HEIGHT = 500;
+    transient ArrayList<Body> bodies = new ArrayList<>();
+    private transient Food food;
     private boolean running = false;
-    Thread thread = new Thread(this, "Game Thread");
-    private boolean left, right, up = true, down;
+    transient Thread thread = new Thread(this, "Game Thread");
+    private boolean left;
+    private boolean right;
+    private boolean up = true;
+    private boolean down;
     private boolean gameStart = true;
-    private Score score;
+    private transient Score score;
 
     public Screen() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -37,6 +40,7 @@ public class Screen extends JPanel implements Runnable {
 
     }
 
+    @Override
     public void paint(Graphics g) {
         g.clearRect(0, 0, WIDTH, HEIGHT);
         g.setColor(Color.black);
@@ -68,7 +72,7 @@ public class Screen extends JPanel implements Runnable {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-
+                Thread.currentThread().interrupt();
                 e.printStackTrace();
             }
 
@@ -116,7 +120,7 @@ public class Screen extends JPanel implements Runnable {
             Body b = new Body(bodies.get(bodies.size() - 1).getLocX(), bodies.get(bodies.size() - 1).getLocY());
             bodies.add(b);
             score.addPoint();
-            
+
             food.move();
         }
 
@@ -130,7 +134,7 @@ public class Screen extends JPanel implements Runnable {
         }
     }
 
-    KeyListener listener = new KeyAdapter() {
+    transient KeyListener listener = new KeyAdapter() {
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyChar() == 'w' && !down) {
@@ -138,25 +142,25 @@ public class Screen extends JPanel implements Runnable {
                 down = false;
                 left = false;
                 right = false;
-                
+
             } else if (e.getKeyChar() == 's' && !up) {
                 up = false;
                 down = true;
                 left = false;
                 right = false;
-                
+
             } else if (e.getKeyChar() == 'a' && !right) {
                 up = false;
                 down = false;
                 left = true;
                 right = false;
-                
+
             } else if (e.getKeyChar() == 'd' && !left) {
                 up = false;
                 down = false;
                 left = false;
                 right = true;
-                
+
             }
         }
     };
