@@ -11,16 +11,16 @@ import java.util.ArrayList;
 public class Screen extends JPanel implements Runnable {
     private static final int WIDTH = 500;
     private static final int HEIGHT = 500;
-    transient ArrayList<Body> bodies = new ArrayList<>();
-    private transient Food food;
+    ArrayList<Body> bodies = new ArrayList<>();
+    private Food food;
     private boolean running = false;
-    transient Thread thread = new Thread(this, "Game Thread");
+    Thread thread = new Thread(this, "Game Thread");
     private boolean left;
     private boolean right;
     private boolean up = true;
     private boolean down;
     private boolean gameStart = true;
-    private transient Score score;
+    private Score score;
 
     public Screen() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -31,9 +31,12 @@ public class Screen extends JPanel implements Runnable {
     }
 
     public void init() {
-        for (int i = 0; i < 3; i++) {
-            Body body = new Body(250, 250 + i * 10);
+
+        for (int i = 0; i < 4; i++) {
+
+            Body body = new Body(250, 250 + i * 10, i == 0 ? i : 1);
             bodies.add(body);
+
         }
         food = new Food();
         score = new Score();
@@ -86,12 +89,18 @@ public class Screen extends JPanel implements Runnable {
             bodies.get(i).setLocY(bodies.get(i - 1).getLocY());
             bodies.get(i).setLocX(bodies.get(i - 1).getLocX());
         }
+        if (food.isIn(bodies.get(0).getlocXY())) {
+            Body b = new Body(bodies.get(bodies.size() - 1).getLocX(), bodies.get(bodies.size() - 1).getLocY(), 1);
+            bodies.add(bodies.size() - 1, b);
+            score.addPoint();
+
+            food.move();
+        }
         if (up) {
 
             bodies.get(0).moveY(-10);
             bodies.get(0).moveX(0);
-
-            if (bodies.get(0).getLocY() < 0)
+            if (bodies.get(0).getLocY() < 20)
                 bodies.get(0).setLocY(500 - 10);
 
         } else if (down) {
@@ -116,13 +125,6 @@ public class Screen extends JPanel implements Runnable {
                 bodies.get(0).setLocX(0 + 10);
 
         }
-        if (food.isIn(bodies.get(0).getlocXY())) {
-            Body b = new Body(bodies.get(bodies.size() - 1).getLocX(), bodies.get(bodies.size() - 1).getLocY());
-            bodies.add(b);
-            score.addPoint();
-
-            food.move();
-        }
 
     }
 
@@ -134,32 +136,32 @@ public class Screen extends JPanel implements Runnable {
         }
     }
 
-    transient KeyListener listener = new KeyAdapter() {
+    KeyListener listener = new KeyAdapter() {
         @Override
         public void keyPressed(KeyEvent e) {
-            if (e.getKeyChar() == 'w' && !down) {
+            if (e.getKeyChar() == 'w' && !down && !up) {
                 up = true;
                 down = false;
                 left = false;
                 right = false;
 
-            } else if (e.getKeyChar() == 's' && !up) {
-                up = false;
+            } else if (e.getKeyChar() == 's' && !up && !down) {
                 down = true;
+                up = false;
                 left = false;
                 right = false;
 
-            } else if (e.getKeyChar() == 'a' && !right) {
-                up = false;
-                down = false;
+            } else if (e.getKeyChar() == 'a' && !right && !left) {
                 left = true;
+                up = false;
+                down = false;
                 right = false;
 
-            } else if (e.getKeyChar() == 'd' && !left) {
+            } else if (e.getKeyChar() == 'd' && !left && !right) {
+                right = true;
                 up = false;
                 down = false;
                 left = false;
-                right = true;
 
             }
         }

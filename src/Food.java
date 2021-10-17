@@ -19,7 +19,7 @@ public class Food {
     }
 
     public void move() {
-        locX = (int) (Math.random() * 50) * 10;
+        locX = (int) (Math.random() * 50) * 10-10;
         locY = (int) (Math.random() * 50) * 10;
     }
 
